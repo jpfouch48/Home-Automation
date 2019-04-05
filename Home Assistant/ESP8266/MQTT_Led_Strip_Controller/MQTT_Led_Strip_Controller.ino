@@ -349,7 +349,14 @@ WiFiClient espClient; //this needs to be unique for each controller
 PubSubClient client(espClient); //this needs to be unique for each controller
 
 ////////////////////////////////////////////////////////////
-
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void setup() {
   WiFi.setSleepMode(WIFI_NONE_SLEEP);
   Serial.begin(115200);
@@ -417,7 +424,14 @@ void setup() {
  
 }
 
-
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void setup_wifi() {
 
   delay(10);
@@ -439,6 +453,14 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 }
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void callback(char* topic, byte* payload, unsigned int length) {
   int i = 0;
 
@@ -511,8 +533,14 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
-
-
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void loop() {
 
   if (!client.connected()) {
@@ -938,6 +966,14 @@ void loop() {
 ////////////////////////place setup__Palette and __Palettestriped custom functions here - for Candy Cane effects ///////////////// 
 ///////You can use up to 4 colors and change the pattern of A's AB's B's and BA's as you like//////////////
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void setupStripedPalette( CRGB A, CRGB AB, CRGB B, CRGB BA)
 {
   currentPalettestriped = CRGBPalette16(
@@ -945,6 +981,14 @@ void setupStripedPalette( CRGB A, CRGB AB, CRGB B, CRGB BA)
                           );
 }
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void setupHailPalette( CRGB A, CRGB AB, CRGB B, CRGB BA)
 {
   hailPalettestriped = CRGBPalette16(
@@ -952,6 +996,14 @@ void setupHailPalette( CRGB A, CRGB AB, CRGB B, CRGB BA)
                           );
 }
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void setupHJPalette( CRGB A, CRGB AB, CRGB B, CRGB BA)
 {
   HJPalettestriped = CRGBPalette16(
@@ -959,6 +1011,14 @@ void setupHJPalette( CRGB A, CRGB AB, CRGB B, CRGB BA)
                           );
 }
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void setupIndPalette( CRGB A, CRGB AB, CRGB B, CRGB BA)
 {
   IndPalettestriped = CRGBPalette16(
@@ -966,6 +1026,14 @@ void setupIndPalette( CRGB A, CRGB AB, CRGB B, CRGB BA)
                           );
 }
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void setupThxPalette( CRGB A, CRGB AB, CRGB B, CRGB BA)
 {
   ThxPalettestriped = CRGBPalette16(
@@ -973,6 +1041,14 @@ void setupThxPalette( CRGB A, CRGB AB, CRGB B, CRGB BA)
                           );
 }
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void setupHalloweenPalette( CRGB A, CRGB AB, CRGB B, CRGB BA)
 {
   HalloweenPalettestriped = CRGBPalette16(
@@ -982,9 +1058,24 @@ void setupHalloweenPalette( CRGB A, CRGB AB, CRGB B, CRGB BA)
 
 ////////////////////////////////////////////////////////
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void fadeall() { for(int i = 0; i < NUM_LEDS; i++) { leds[i].nscale8(250); } } //for CYCLON
 
-
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void Fire2012WithPalette()
 {
 // Array of temperature readings at each simulation cell
@@ -1022,7 +1113,14 @@ void Fire2012WithPalette()
     }
 }
 
-
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void addGlitter( fract8 chanceOfGlitter) 
 {
   if( random8() < chanceOfGlitter) {
@@ -1030,6 +1128,14 @@ void addGlitter( fract8 chanceOfGlitter)
   }
 }
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void addGlitterColor( fract8 chanceOfGlitter, int Rcolor, int Gcolor, int Bcolor) 
 {
   if( random8() < chanceOfGlitter) {
@@ -1037,7 +1143,14 @@ void addGlitterColor( fract8 chanceOfGlitter, int Rcolor, int Gcolor, int Bcolor
   }
 }
 
-
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) {

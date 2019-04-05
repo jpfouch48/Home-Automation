@@ -50,6 +50,14 @@ WiFiClient     wifi_client;
 // MQTT
 PubSubClient   mqtt_client(wifi_client);
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void setup() 
 {
   WiFi.setSleepMode(WIFI_NONE_SLEEP);
@@ -71,6 +79,14 @@ void setup()
   Serial.println(WiFi.localIP());  
 }
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void wifi_setup() 
 {
   delay(10);
@@ -92,11 +108,27 @@ void wifi_setup()
   Serial.println(WiFi.localIP());
 }
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void mqtt_callback(char* topic, byte* payload, unsigned int length) 
 {
 
 }
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void wifi_reconnect() {
   // Loop until we're reconnected
   while (!wifi_client.connected()) {
@@ -125,6 +157,14 @@ void wifi_reconnect() {
   }
 }
 
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void loop() 
 {
   if (!wifi_client.connected()) {

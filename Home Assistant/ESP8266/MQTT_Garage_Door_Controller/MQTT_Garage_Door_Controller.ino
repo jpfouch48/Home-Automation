@@ -46,7 +46,15 @@ String strTopic;
 String strPayload;
 char* door_state = "UNDEFINED";
 char* last_state = "";
- 
+
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void setup() {
   //Set Relay(output) and Door(input) pins
   pinMode(RELAY_PIN, OUTPUT);
@@ -62,7 +70,14 @@ void setup() {
   client.setCallback(callback); //callback is the function that gets called for a topic sub
 }
 
-
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void loop() {
   //If MQTT client can't connect to broker, then reconnect
   if (!client.connected()) {
@@ -73,6 +88,14 @@ void loop() {
   
 }
  
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void callback(char* topic, byte* payload, unsigned int length) {
   //if the 'garage/button' topic has a payload "OPEN", then 'click' the relay
   payload[length] = '\0';
@@ -95,8 +118,14 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
-
-
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void setup_wifi() {
 
   delay(10);
@@ -118,8 +147,14 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 }
 
-
-
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void checkDoorState() {
   //Checks if the door state has changed, and MQTT pub the change
   last_state = door_state; //get previous state of door
@@ -132,7 +167,15 @@ void checkDoorState() {
     Serial.println(door_state);
   }
 }
- 
+
+// **************************************************************************** 
+// Routine: 
+//
+// Description:
+//
+// Arguments:
+//
+// **************************************************************************** 
 void reconnect() {
   //Reconnect to Wifi and to MQTT. If Wifi is already connected, then autoconnect doesn't do anything.
   Serial.print("Attempting MQTT connection...");
