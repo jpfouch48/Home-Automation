@@ -166,7 +166,7 @@ void loop()
       uint32_t now = millis();
       Serial.printf("Timestamp : %06u.%03u\n", now / 1000, now % 1000);
       
-      if (results.overflow)
+      if (gIrResult.overflow)
       {
         Serial.printf(
             "WARNING: IR code is too big for buffer (>= %d). "
