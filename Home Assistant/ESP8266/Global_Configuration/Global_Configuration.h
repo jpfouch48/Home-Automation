@@ -37,4 +37,11 @@
 #define MQTT_USER         "TODO_MQTT_USER"
 #define MQTT_USER_PW      "TODO_MQTT_USER_PW"
 
+
+// ****************************************************************************
+// OTA Defines
+// ****************************************************************************
+#define OTA_PW            ""
+#define OTA_PORT          8266
+
 #endif // GLOBAL_CONFIGURATION_HEADER

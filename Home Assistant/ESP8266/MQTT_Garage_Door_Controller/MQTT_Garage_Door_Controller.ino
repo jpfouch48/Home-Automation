@@ -92,7 +92,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
 
   //Serial.println(strTopic);
 
-  if (strTopic == MQTT_DOOR_RELAY_TOPIC)
+  if (strTopic == MQTT_SUB_DOOR_RELAY_TOPIC)
   {
     switch1 = String((char*)payload);
     Serial.println(switch1);
@@ -155,12 +155,12 @@ void checkDoorState()
   {
     if(gDoorState == DoorState::Closed)
     {
-      gMqttClient.publish(MQTT_DOOR_SENSOR_TOPIC, "CLOSED", true);
+      gMqttClient.publish(MQTT_PUB_DOOR_SENSOR_TOPIC, "CLOSED", true);
       Serial.println("CLOSED");
     }
     else
     {
-      gMqttClient.publish(MQTT_DOOR_SENSOR_TOPIC, "OPEN", true);
+      gMqttClient.publish(MQTT_PUB_DOOR_SENSOR_TOPIC, "OPEN", true);
       Serial.println("OPENED");
     }
   }

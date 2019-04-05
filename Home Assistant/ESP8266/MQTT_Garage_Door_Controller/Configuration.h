@@ -21,10 +21,10 @@
 #define DOOR_SENSOR_PIN       15
  
 // MQTT Topics
-#define MQTT_BASE_TOPIC        "sensor/garage/"
-#define MQTT_ALL_TOPICS        MQTT_BASE_TOPIC "#"
-#define MQTT_DOOR_SENSOR_TOPIC MQTT_BASE_TOPIC "state1" 
-#define MQTT_DOOR_RELAY_TOPIC  MQTT_BASE_TOPIC "action1"
+#define MQTT_BASE_TOPIC             "sensor/" MQTT_SENSOR_NAME "/garage/"
+#define MQTT_ALL_TOPICS             MQTT_BASE_TOPIC "#"
+#define MQTT_PUB_DOOR_SENSOR_TOPIC  MQTT_BASE_TOPIC "state1" 
+#define MQTT_SUB_DOOR_RELAY_TOPIC   MQTT_BASE_TOPIC "action1"
 
 
 // Enum to define the states of the door
