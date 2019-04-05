@@ -5,20 +5,20 @@
 ////**********START CUSTOM PARAMS******************//
  
 ////Define parameters for the http firmware update // which we aren't using 
-const char* host = "Garage1ESP";
-const char* ssid = "SSID";
-const char* password = "SSIDPW";
+const char* host     = "[MQTT_SENSOR_NAME]";
+const char* ssid     = "[SSID]";
+const char* password = "[SSID_PW]";
  
 //Define the pins
 #define RELAY_PIN D1
 #define DOOR_PIN 15 //just another name for D8 pin
  
 //Define your own MQTT 
-#define mqtt_server "192.168.1.20"  //This is what you set up in HA. 
-#define door_topic "sensor/garage/state1" //you can change this name, but make sure you "replace all"
-#define button_topic "sensor/garage/action1" //you can change this name, but make sure you "replace all"
-const char* mqtt_user = "jpfouch48"; //This is what you set up in HA. 
-const char* mqtt_pass = "curran10K!"; //This is what you set up in HA. 
+#define mqtt_server     "[MQTT_SERVER]"         //This is what you set up in HA. 
+#define door_topic      "sensor/garage/state1"  //you can change this name, but make sure you "replace all"
+#define button_topic    "sensor/garage/action1" //you can change this name, but make sure you "replace all"
+const char* mqtt_user = "[MQTT_USER]";          //This is what you set up in HA. 
+const char* mqtt_pass = "[MQTT_PW]";            //This is what you set up in HA. 
  
 //************END CUSTOM PARAMS********************//
 //This can be used to output the date the code was compiled
@@ -39,7 +39,7 @@ char* last_state = "";
 void setup() {
   //Set Relay(output) and Door(input) pins
   pinMode(RELAY_PIN, OUTPUT);
-  digitalWrite(RELAY_PIN, HIGH);
+  digitalWrite(RELAY_PIN, LOW); // was HIGH
   pinMode(DOOR_PIN, INPUT);
  
   Serial.begin(115200);
@@ -66,6 +66,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
   //if the 'garage/button' topic has a payload "OPEN", then 'click' the relay
   payload[length] = '\0';
   strTopic = String((char*)topic);
+
+  //Serial.println(strTopic);
+
   if (strTopic == button_topic)
   {
     switch1 = String((char*)payload);
@@ -74,9 +77,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
     {
       //'click' the relay
       Serial.println("ON");
-      digitalWrite(RELAY_PIN, LOW);
+      digitalWrite(RELAY_PIN, HIGH); // was LOW
       delay(600);
-      digitalWrite(RELAY_PIN, HIGH);
+      digitalWrite(RELAY_PIN, LOW);  // was HIGH
     }
   }
 }
