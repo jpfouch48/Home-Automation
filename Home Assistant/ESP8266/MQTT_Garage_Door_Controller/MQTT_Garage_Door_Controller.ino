@@ -9,9 +9,11 @@
 //  https://github.com/Snipercaine/HA_Garage_Doors
 //
 // ****************************************************************************
+#include "../Global_Configuration.h"
+
 #include <ESP8266SSDP.h>
-#include <ESP8266WiFi.h>          //ESP8266 Core WiFi Library
-#include <PubSubClient.h>         //MQTT
+#include <ESP8266WiFi.h>
+#include <PubSubClient.h>
  
 ////**********START CUSTOM PARAMS******************//
  

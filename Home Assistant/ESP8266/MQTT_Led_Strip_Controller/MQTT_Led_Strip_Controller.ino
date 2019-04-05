@@ -10,6 +10,8 @@
 //  https://github.com/Snipercaine/Holiday-LED-files
 //
 // ****************************************************************************
+#include "../Global_Configuration.h"
+
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
