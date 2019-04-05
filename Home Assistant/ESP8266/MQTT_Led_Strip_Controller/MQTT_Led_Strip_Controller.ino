@@ -24,10 +24,6 @@
 #define FASTLED_ESP8266_RAW_PIN_ORDER
 #include <FastLED.h>
 
-//#include <ArduinoOTA.h>
-//#include <ESP8266mDNS.h>
-//#include <WiFiUdp.h>
-
 // Local configuration headers
 #include "Configuration.h"
 #include "Palette.h"
@@ -43,10 +39,6 @@ String setBrightness = "150";
 int brightness = 150;
 String setAnimationSpeed;
 int animationspeed = 240;
-String setColorTemp;
-int Rcolor = 0;
-int Gcolor = 0;
-int Bcolor = 0;
 CRGB leds[NUM_LEDS];
 
 // Custom Paletts
@@ -296,9 +288,9 @@ void update_effect(String aEffect)
   if(setPower == "OFF")
     return;
 
-  int Rcolor = setColor.substring(0, setColor.indexOf(',')).toInt();
-  int Gcolor = setColor.substring(setColor.indexOf(',') + 1, setColor.lastIndexOf(',')).toInt();
-  int Bcolor = setColor.substring(setColor.lastIndexOf(',') + 1).toInt();
+  gRcolor = setColor.substring(0, setColor.indexOf(',')).toInt();
+  gGcolor = setColor.substring(setColor.indexOf(',') + 1, setColor.lastIndexOf(',')).toInt();
+  gBcolor = setColor.substring(setColor.lastIndexOf(',') + 1).toInt();
 
   gStartIndex++;
 
@@ -430,7 +422,7 @@ void update_effect(String aEffect)
   {
     fadeToBlackBy( leds, NUM_LEDS, 20);
     int pos = beatsin16(13, 0, NUM_LEDS);
-    leds[pos] += CRGB(Rcolor, Gcolor, Bcolor);
+    leds[pos] += CRGB(gRcolor, gGcolor, gBcolor);
   }
   else if (setEffect == "Juggle" ) 
   {
@@ -438,7 +430,7 @@ void update_effect(String aEffect)
     byte dothue = 0;
     for ( int i = 0; i < 8; i++) 
     {
-      leds[beatsin16(i + 7, 0, NUM_LEDS)] |= CRGB(Rcolor, Gcolor, Bcolor);
+      leds[beatsin16(i + 7, 0, NUM_LEDS)] |= CRGB(gRcolor, gGcolor, gBcolor);
       dothue += 32;
     }
   }
@@ -446,7 +438,7 @@ void update_effect(String aEffect)
   {
     fadeToBlackBy( leds, NUM_LEDS, 10);
     int pos = random16(NUM_LEDS);
-    leds[pos] += CRGB(Rcolor + random8(64), Gcolor, Bcolor);
+    leds[pos] += CRGB(gRcolor + random8(64), gGcolor, gBcolor);
   }
   else if (setEffect == "Rainbow") 
   {
@@ -461,12 +453,20 @@ void update_effect(String aEffect)
     static uint8_t starthue = 0;
     thishue++;
     fill_rainbow(leds, NUM_LEDS, thishue, deltahue);
-    addGlitter(80);
+
+    if( random8() < 80) 
+    {
+      leds[ random16(NUM_LEDS) ] += CRGB::White;
+    }    
   }
   else if (setEffect == "Glitter") 
   {
     fadeToBlackBy( leds, NUM_LEDS, 20);
-    addGlitterColor(80, Rcolor, Gcolor, Bcolor);
+
+    if( random8() < 80) 
+    {
+      leds[ random16(NUM_LEDS) ] += CRGB(gRcolor, gGcolor, gBcolor);
+    }    
   }
   else if (setEffect == "BPM") 
   {
@@ -479,7 +479,7 @@ void update_effect(String aEffect)
   }
   else if (setEffect == "Solid") 
   {
-    fill_solid(leds, NUM_LEDS, CRGB(Rcolor, Gcolor, Bcolor));
+    fill_solid(leds, NUM_LEDS, CRGB(gRcolor, gGcolor, gBcolor));
   }
   else if (setEffect == "Twinkle") 
   {
@@ -599,8 +599,41 @@ void update_effect(String aEffect)
       delay(10);
     }
   }
-  else if (setEffect == "Fire") { 
-      Fire2012WithPalette();
+  else if (setEffect == "Fire") 
+  { 
+    // Array of temperature readings at each simulation cell
+    static byte heat[NUM_LEDS];
+
+    // Step 1.  Cool down every cell a little
+    for( int i = 0; i < NUM_LEDS; i++) {
+      heat[i] = qsub8( heat[i],  random8(0, ((COOLING * 10) / NUM_LEDS) + 2));
+    }
+  
+    // Step 2.  Heat from each cell drifts 'up' and diffuses a little
+    for( int k= NUM_LEDS - 1; k >= 2; k--) {
+      heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
+    }
+    
+    // Step 3.  Randomly ignite new 'sparks' of heat near the bottom
+    if( random8() < SPARKING ) {
+      int y = random8(7);
+      heat[y] = qadd8( heat[y], random8(160,255) );
+    }
+
+    // Step 4.  Map from heat cells to LED colors
+    for( int j = 0; j < NUM_LEDS; j++) {
+      // Scale the heat value from 0-255 down to 0-240
+      // for best results with color palettes.
+      byte colorindex = scale8( heat[j], 240);
+      CRGB color = ColorFromPalette( gPaletteFire, colorindex);
+      int pixelnumber;
+      if( gReverseDirection ) {
+        pixelnumber = (NUM_LEDS-1) - j;
+      } else {
+        pixelnumber = j;
+      }
+      leds[pixelnumber] = color;
+    }
   }
   else 
   {
@@ -647,7 +680,8 @@ void update_effect(String aEffect)
     }
   }
 
-  EVERY_N_SECONDS(5) {
+  EVERY_N_SECONDS(5) 
+  {
     targetPalette = CRGBPalette16(CHSV(random8(), 255, random8(128, 255)), CHSV(random8(), 255, random8(128, 255)), CHSV(random8(), 192, random8(128, 255)), CHSV(random8(), 255, random8(128, 255)));
   }
 
@@ -691,6 +725,7 @@ void loop()
 // **************************************************************************** 
 void fadeall() { for(int i = 0; i < NUM_LEDS; i++) { leds[i].nscale8(250); } } //for CYCLON
 
+
 // **************************************************************************** 
 // Routine: 
 //
@@ -699,87 +734,16 @@ void fadeall() { for(int i = 0; i < NUM_LEDS; i++) { leds[i].nscale8(250); } } /
 // Arguments:
 //
 // **************************************************************************** 
-void Fire2012WithPalette()
+void wifi_reconnect() 
 {
-// Array of temperature readings at each simulation cell
-  static byte heat[NUM_LEDS];
-
-  // Step 1.  Cool down every cell a little
-    for( int i = 0; i < NUM_LEDS; i++) {
-      heat[i] = qsub8( heat[i],  random8(0, ((COOLING * 10) / NUM_LEDS) + 2));
-    }
-  
-    // Step 2.  Heat from each cell drifts 'up' and diffuses a little
-    for( int k= NUM_LEDS - 1; k >= 2; k--) {
-      heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
-    }
-    
-    // Step 3.  Randomly ignite new 'sparks' of heat near the bottom
-    if( random8() < SPARKING ) {
-      int y = random8(7);
-      heat[y] = qadd8( heat[y], random8(160,255) );
-    }
-
-    // Step 4.  Map from heat cells to LED colors
-    for( int j = 0; j < NUM_LEDS; j++) {
-      // Scale the heat value from 0-255 down to 0-240
-      // for best results with color palettes.
-      byte colorindex = scale8( heat[j], 240);
-      CRGB color = ColorFromPalette( gPaletteFire, colorindex);
-      int pixelnumber;
-      if( gReverseDirection ) {
-        pixelnumber = (NUM_LEDS-1) - j;
-      } else {
-        pixelnumber = j;
-      }
-      leds[pixelnumber] = color;
-    }
-}
-
-// **************************************************************************** 
-// Routine: 
-//
-// Description:
-//
-// Arguments:
-//
-// **************************************************************************** 
-void addGlitter( fract8 chanceOfGlitter) 
-{
-  if( random8() < chanceOfGlitter) {
-    leds[ random16(NUM_LEDS) ] += CRGB::White;
-  }
-}
-
-// **************************************************************************** 
-// Routine: 
-//
-// Description:
-//
-// Arguments:
-//
-// **************************************************************************** 
-void addGlitterColor( fract8 chanceOfGlitter, int Rcolor, int Gcolor, int Bcolor) 
-{
-  if( random8() < chanceOfGlitter) {
-    leds[ random16(NUM_LEDS) ] += CRGB(Rcolor, Gcolor, Bcolor);
-  }
-}
-
-// **************************************************************************** 
-// Routine: 
-//
-// Description:
-//
-// Arguments:
-//
-// **************************************************************************** 
-void wifi_reconnect() {
   // Loop until we're reconnected
-  while (!gMqttClient.connected()) {
+  while (!gMqttClient.connected()) 
+  {
     Serial.print("Attempting MQTT connection...");
+
     // Attempt to connect
-  if (gMqttClient.connect(MQTT_SENSOR_NAME, MQTT_USER, MQTT_USER_PW)) {
+    if (gMqttClient.connect(MQTT_SENSOR_NAME, MQTT_USER, MQTT_USER_PW)) 
+    {
       Serial.println("connected");
 
       FastLED.clear (); //Turns off startup LEDs after connection is made
@@ -787,12 +751,13 @@ void wifi_reconnect() {
 
       gMqttClient.subscribe(MQTT_SUB_SET_COLOR);
       gMqttClient.subscribe(MQTT_SUB_SET_BRIGHTNESS);
-      //gMqttClient.subscribe(setcolortemp);
       gMqttClient.subscribe(MQTT_SUB_SET_POWER);
       gMqttClient.subscribe(MQTT_SUB_SET_EFFECT);
       gMqttClient.subscribe(MQTT_SUB_ANIMATION_SPEED);
       gMqttClient.publish(MQTT_PUB_SET_POWER, "OFF");
-    } else {
+    } 
+    else 
+    {
       Serial.print("failed, rc=");
       Serial.print(gMqttClient.state());
       Serial.println(" try again in 5 seconds");
