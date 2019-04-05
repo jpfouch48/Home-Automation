@@ -1,3 +1,14 @@
+// ****************************************************************************
+// Module: MQTT Garage Door Controller
+//
+// Description:
+// 
+// Required Packages:
+//
+// Acknoledgements:
+//  https://github.com/Snipercaine/HA_Garage_Doors
+//
+// ****************************************************************************
 #include <ESP8266SSDP.h>
 #include <ESP8266WiFi.h>          //ESP8266 Core WiFi Library
 #include <PubSubClient.h>         //MQTT

@@ -1,4 +1,15 @@
 
+// ****************************************************************************
+// Module: MQTT Led Strip Controller
+//
+// Description:
+// 
+// Required Packages:
+//
+// Acknoledgements:
+//  https://github.com/Snipercaine/Holiday-LED-files
+//
+// ****************************************************************************
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
